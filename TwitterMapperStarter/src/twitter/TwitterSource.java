@@ -1,36 +1,20 @@
 package twitter;
 
-import org.junit.jupiter.api.Test;
-import twitter.test.TestPlaybackTwitterSource;
 import twitter4j.Status;
 import util.ImageCache;
 
 import java.util.*;
 
-
 public abstract class TwitterSource extends Observable {
-    protected boolean doLogging = true;
+    protected boolean isLogging = true;
     // The set of terms to look for in the stream of tweets
     protected Set<String> terms = new HashSet<>();
 
-    // Called each time a new set of filter terms has been established
-    abstract protected void sync();
-
     protected void log(Status status) {
-        if (doLogging) {
-            System.out.println(status.getUser().getName() + ": " + status.getText());
+        if (isLogging) {
+            logUserStatus(status);
         }
         ImageCache.getInstance().loadImage(status.getUser().getProfileImageURL());
-    }
-
-    public void setFilterTerms(Collection<String> newterms) {
-        terms.clear();
-        terms.addAll(newterms);
-        sync();
-    }
-
-    public List<String> getFilterTerms() {
-        return new ArrayList<>(terms);
     }
 
     // This method is called each time a tweet is delivered to the application.
@@ -40,4 +24,21 @@ public abstract class TwitterSource extends Observable {
         setChanged();
         notifyObservers(s);
     }
+
+
+    public List<String> getFilterTerms() {
+        return new ArrayList<>(terms);
+    }
+
+    public void setFilterTerms(Collection<String> terms) {
+        this.terms.clear();
+        this.terms.addAll(terms);
+        sync();
+    }
+    private void logUserStatus(Status status) {
+        System.out.println(status.getUser().getName() + ": " + status.getText());
+    }
+
+    // Called each time a new set of filter terms has been established
+    abstract protected void sync();
 }

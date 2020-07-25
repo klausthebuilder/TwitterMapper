@@ -8,24 +8,22 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
 import query.Query;
 import twitter.LiveTwitterSource;
-import twitter.PlaybackTwitterSource;
 import twitter.TwitterSource;
-
-import util.SphericalGeometry;
+import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
 import java.util.Timer;
+import java.util.*;
 
 /**
  * The Twitter viewer application
  * Derived from a JMapViewer demo program written by Jan Peter Stotz
  */
-public class Application extends JFrame {
+public class MainPanel extends JFrame {
     // The content panel, which contains the entire UI
     private final ContentPanel contentPanel;
     // The provider of the tiles for the map, we use the Bing source
@@ -36,51 +34,10 @@ public class Application extends JFrame {
     private TwitterSource twitterSource;
 
 
-    private void initialize() {
-        // To use the live twitter stream, use the following line
-         twitterSource = new LiveTwitterSource();
-
-        // To use the recorded twitter stream, use the following line
-        // The number passed to the constructor is a speedup value:
-        //  1.0 - play back at the recorded speed
-        //  2.0 - play back twice as fast
-//        twitterSource = new PlaybackTwitterSource(60.0);
-
-        queries = new ArrayList<>();
-    }
-
     /**
-     * A new query has been entered via the User Interface
-     * @param   query   The new query object
+     * Constructs the {@code MainPanel}.
      */
-    public void addQuery(Query query) {
-        queries.add(query);
-        Set<String> allterms = getQueryTerms();
-        twitterSource.setFilterTerms(allterms);
-        contentPanel.addQuery(query);
-        // TO DO: This is the place where you should connect the new query to the twitter source
-        twitterSource.addObserver(query);
-        twitterSource.getFilterTerms();
-
-    }
-
-    /**
-     * return a list of all terms mentioned in all queries. The live twitter source uses this
-     * to request matching tweets from the Twitter API.
-     * @return
-     */
-    private Set<String> getQueryTerms() {
-        Set<String> ans = new HashSet<>();
-        for (Query q : queries) {
-            ans.addAll(q.getFilter().terms());
-        }
-        return ans;
-    }
-
-    /**
-     * Constructs the {@code Application}.
-     */
-    public Application() {
+    public MainPanel() {
         super("Twitter content viewer");
         setSize(300, 300);
         initialize();
@@ -130,23 +87,65 @@ public class Application extends JFrame {
                 // TO DO: Use the following method to set the text that appears at the mouse cursor
                 // map().setToolTipText("This is a tool tip");
                 List<MapMarker> markerList = getMarkersCovering(pos, pixelWidth(p));
-                if(markerList.size()>0) {
+                if (markerList.size() > 0) {
                     MapMarker m = markerList.get(markerList.size() - 1);
-                    String tweet = ((PrettyMapMarker)m).getTweet();
-                    String profileImgUrl = ((PrettyMapMarker)m).getProfileImageUrl();
-                    map().setToolTipText("<html><img src="+ profileImgUrl +" height=\"42\" width=\"42\">"+ tweet + markerList +"</html>");
+                    String tweet = ((PrettyMapMarker) m).getTweet();
+                    String profileImgUrl = ((PrettyMapMarker) m).getProfileImageUrl();
+                    map().setToolTipText("<html><img src=" + profileImgUrl + " height=\"42\" width=\"42\">" + tweet + markerList + "</html>");
                 }
             }
         });
     }
 
+    private void initialize() {
+        // To use the live twitter stream, use the following line
+        twitterSource = new LiveTwitterSource();
+
+        // To use the recorded twitter stream, use the following line
+        // The number passed to the constructor is a speedup value:
+        //  1.0 - play back at the recorded speed
+        //  2.0 - play back twice as fast
+//        twitterSource = new PlaybackTwitterSource(60.0);
+
+        queries = new ArrayList<>();
+    }
+
+    /**
+     * A new query has been entered via the User Interface
+     *
+     * @param query The new query object
+     */
+    public void addQuery(Query query) {
+        queries.add(query);
+        Set<String> allterms = getQueryTerms();
+        twitterSource.setFilterTerms(allterms);
+        contentPanel.addQuery(query);
+        // TO DO: This is the place where you should connect the new query to the twitter source
+        twitterSource.addObserver(query);
+        twitterSource.getFilterTerms();
+
+    }
+
+    /**
+     * return a list of all terms mentioned in all queries. The live twitter source uses this
+     * to request matching tweets from the Twitter API.
+     *
+     * @return
+     */
+    private Set<String> getQueryTerms() {
+        Set<String> ans = new HashSet<>();
+        for (Query q : queries) {
+            ans.addAll(q.getFilter().terms());
+        }
+        return ans;
+    }
 
     // How big is a single pixel on the map?  We use this to compute which tweet markers
     // are at the current most position.
     private double pixelWidth(Point p) {
         ICoordinate center = map().getPosition(p);
         ICoordinate edge = map().getPosition(new Point(p.x + 1, p.y));
-        return SphericalGeometry.distanceBetween(center, edge);
+        return Util.distanceBetween(center, edge);
     }
 
     // Get those layers (of tweet markers) that are visible because their corresponding query is enabled
@@ -166,7 +165,7 @@ public class Application extends JFrame {
         Set<Layer> visibleLayers = getVisibleLayers();
         for (MapMarker m : map().getMapMarkerList()) {
             if (!visibleLayers.contains(m.getLayer())) continue;
-            double distance = SphericalGeometry.distanceBetween(m.getCoordinate(), pos);
+            double distance = Util.distanceBetween(m.getCoordinate(), pos);
             if (distance < m.getRadius() * pixelWidth) {
                 ans.add(m);
             }
@@ -176,13 +175,6 @@ public class Application extends JFrame {
 
     public JMapViewer map() {
         return contentPanel.getViewer();
-    }
-
-    /**
-     * @param args Application program arguments (which are ignored)
-     */
-    public static void main(String[] args) {
-        new Application().setVisible(true);
     }
 
     // Update which queries are visible after any checkBox has been changed
@@ -208,6 +200,4 @@ public class Application extends JFrame {
         twitterSource.setFilterTerms(allterms);
         twitterSource.deleteObserver(query);
     }
-
-
 }

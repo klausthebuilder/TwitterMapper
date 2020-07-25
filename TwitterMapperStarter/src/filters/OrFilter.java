@@ -4,7 +4,7 @@ import twitter4j.Status;
 
 import java.util.List;
 
-public class OrFilter implements Filter{
+public class OrFilter implements Filter {
     private final Filter child1;
     private final Filter child2;
 
@@ -14,7 +14,9 @@ public class OrFilter implements Filter{
     }
 
     @Override
-    public boolean matches(Status s) { return (child1.matches(s) || child2.matches(s)); }
+    public boolean matches(Status status) {
+        return (child1.matches(status) || child2.matches(status));
+    }
 
     @Override
     public List<String> terms() {
@@ -22,5 +24,7 @@ public class OrFilter implements Filter{
     }
 
 
-    public String toString() { return "(" + child1.toString() + " or " + child2.toString() + ")" ; }
+    public String toString() {
+        return "(" + child1.toString() + " or " + child2.toString() + ")";
+    }
 }

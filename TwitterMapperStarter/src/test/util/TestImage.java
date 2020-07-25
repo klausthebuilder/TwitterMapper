@@ -1,10 +1,9 @@
-package util.test;
+package test.util;
 
 import org.junit.jupiter.api.Test;
 import util.Util;
 
 import java.awt.image.BufferedImage;
-
 
 public class TestImage {
     @Test

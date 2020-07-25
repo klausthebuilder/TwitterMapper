@@ -1,7 +1,7 @@
 package filters;
 
-
 import twitter4j.Status;
+
 import java.util.List;
 
 public class AndFilter implements Filter {
@@ -14,8 +14,8 @@ public class AndFilter implements Filter {
     }
 
     @Override
-    public boolean matches(Status s) {
-        return (child1.matches(s) && child2.matches(s));
+    public boolean matches(Status status) {
+        return (child1.matches(status) && child2.matches(status));
     }
 
     @Override
@@ -23,6 +23,7 @@ public class AndFilter implements Filter {
         return child1.terms();
     }
 
-
-    public String toString() { return "(" + child1.toString() + " and " + child2.toString() + ")" ; }
+    public String toString() {
+        return "(" + child1.toString() + " and " + child2.toString() + ")";
+    }
 }

@@ -7,14 +7,12 @@ import org.openstreetmap.gui.jmapviewer.MapMarkerCircle;
 import java.awt.*;
 
 public class MapMarkerSimple extends MapMarkerCircle {
-    public static final double defaultMarkerSize = 5.0;
-    public static final Color defaultColor = Color.red;
+    public static final double DEFAULT_MARKER_SIZE = 5.0;
+    public static final Color DEFAULT_COLOR = Color.red;
 
     public MapMarkerSimple(Layer layer, Coordinate coord) {
-        super(layer, null, coord, defaultMarkerSize, STYLE.FIXED, getDefaultStyle());
+        super(layer, null, coord, DEFAULT_MARKER_SIZE, STYLE.FIXED, getDefaultStyle());
         setColor(Color.BLACK);
-        setBackColor(defaultColor);
+        setBackColor(DEFAULT_COLOR);
     }
-
-
 }

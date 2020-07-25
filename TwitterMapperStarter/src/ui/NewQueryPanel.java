@@ -15,12 +15,11 @@ import java.util.Random;
  */
 public class NewQueryPanel extends JPanel {
     private final JTextField newQuery = new JTextField(10);
-    private final JLabel queryLabel = new JLabel("Enter Search: ");
     private final JPanel colorSetter;
-    private final Application app;
+    private final MainPanel app;
     private Random random;
 
-    public NewQueryPanel(Application app) {
+    public NewQueryPanel(MainPanel app) {
         this.app = app;
         this.colorSetter = new JPanel();
 
@@ -28,47 +27,48 @@ public class NewQueryPanel extends JPanel {
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
+        JLabel queryLabel = new JLabel("Enter Search: ");
         queryLabel.setLabelFor(newQuery);
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.fill = GridBagConstraints.NONE;
-        c.gridy = 0;
-        c.gridx = 0;
-        add(queryLabel, c);
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        gridBagConstraints.fill = GridBagConstraints.NONE;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 0;
+        add(queryLabel, gridBagConstraints);
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         newQuery.setMaximumSize(new Dimension(200, 20));
-        c.gridx = 1;
-        add(newQuery, c);
+        gridBagConstraints.gridx = 1;
+        add(newQuery, gridBagConstraints);
 
         add(Box.createRigidArea(new Dimension(5, 5)));
 
         JLabel colorLabel = new JLabel("Select Color: ");
         colorSetter.setBackground(getRandomColor());
 
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.fill = GridBagConstraints.NONE;
-        c.gridy = 1;
-        c.gridx = 0;
-        add(colorLabel, c);
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
+        gridBagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        gridBagConstraints.fill = GridBagConstraints.NONE;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
+        add(colorLabel, gridBagConstraints);
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.gridx = 1;
         colorSetter.setMaximumSize(new Dimension(200, 20));
-        add(colorSetter, c);
+        add(colorSetter, gridBagConstraints);
 
         add(Box.createRigidArea(new Dimension(5, 5)));
 
         JButton addQueryButton = new JButton("Add New Search");
-        c.gridx = GridBagConstraints.RELATIVE;       //aligned with button 2
-        c.gridwidth = 2;   //2 columns wide
-        c.gridy = GridBagConstraints.RELATIVE;       //third row
-        add(addQueryButton, c);
+        gridBagConstraints.gridx = GridBagConstraints.RELATIVE;       //aligned with button 2
+        gridBagConstraints.gridwidth = 2;   //2 columns wide
+        gridBagConstraints.gridy = GridBagConstraints.RELATIVE;       //third row
+        add(addQueryButton, gridBagConstraints);
 
         setBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createTitledBorder("New Search"),
-                        BorderFactory.createEmptyBorder(5,5,5,5)));
+                        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         addQueryButton.addActionListener(new ActionListener() {
             @Override
