@@ -43,40 +43,44 @@ public class MainPanel extends JFrame {
         initialize();
 
         bing = new BingAerialTileSource();
-
         // Do UI initialization
         contentPanel = new ContentPanel(this);
+
+        configUI();
+        configMap();
+        configTimer();
+    }
+
+
+    private void initialize() {
+        // To use the live twitter stream, use the following line
+        twitterSource = new LiveTwitterSource();
+
+        // To use the recorded twitter stream, use the following line
+        // The number passed to the constructor is a speedup value:
+        //  1.0 - play back at the recorded speed
+        //  2.0 - play back twice as fast
+        // twitterSource = new PlaybackTwitterSource(60.0);
+
+        queries = new ArrayList<>();
+    }
+
+    private void configUI() {
         setLayout(new BorderLayout());
         add(contentPanel, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
 
+    private void configMap() {
         // Always have map markers showing.
         map().setMapMarkerVisible(true);
         // Always have zoom controls showing,
         // and allow scrolling of the map around the edge of the world.
         map().setZoomContolsVisible(true);
         map().setScrollWrapEnabled(true);
-
         // Use the Bing tile provider
         map().setTileSource(bing);
-
-        //NOTE This is so that the map eventually loads the tiles once Bing attribution is ready.
-        Coordinate coord = new Coordinate(0, 0);
-
-        Timer bingTimer = new Timer();
-        TimerTask bingAttributionCheck = new TimerTask() {
-            @Override
-            public void run() {
-                // This is the best method we've found to determine when the Bing data has been loaded.
-                // We use this to trigger zooming the map so that the entire world is visible.
-                if (!bing.getAttributionText(0, coord, coord).equals("Error loading Bing attribution data")) {
-                    map().setZoom(2);
-                    bingTimer.cancel();
-                }
-            }
-        };
-        bingTimer.schedule(bingAttributionCheck, 100, 200);
 
         // Set up a motion listener to create a tooltip showing the tweets at the pointer position
         map().addMouseMotionListener(new MouseAdapter() {
@@ -97,17 +101,22 @@ public class MainPanel extends JFrame {
         });
     }
 
-    private void initialize() {
-        // To use the live twitter stream, use the following line
-        twitterSource = new LiveTwitterSource();
-
-        // To use the recorded twitter stream, use the following line
-        // The number passed to the constructor is a speedup value:
-        //  1.0 - play back at the recorded speed
-        //  2.0 - play back twice as fast
-//        twitterSource = new PlaybackTwitterSource(60.0);
-
-        queries = new ArrayList<>();
+    private void configTimer() {
+        //NOTE This is so that the map eventually loads the tiles once Bing attribution is ready.
+        Coordinate coordinate = new Coordinate(0, 0);
+        Timer bingTimer = new Timer();
+        TimerTask bingAttributionCheck = new TimerTask() {
+            @Override
+            public void run() {
+                // This is the best method we've found to determine when the Bing data has been loaded.
+                // We use this to trigger zooming the map so that the entire world is visible.
+                if (!bing.getAttributionText(0, coordinate, coordinate).equals("Error loading Bing attribution data")) {
+                    map().setZoom(2);
+                    bingTimer.cancel();
+                }
+            }
+        };
+        bingTimer.schedule(bingAttributionCheck, 100, 200);
     }
 
     /**
@@ -117,13 +126,12 @@ public class MainPanel extends JFrame {
      */
     public void addQuery(Query query) {
         queries.add(query);
-        Set<String> allterms = getQueryTerms();
-        twitterSource.setFilterTerms(allterms);
+        Set<String> allTerms = getQueryTerms();
+        twitterSource.setFilterTerms(allTerms);
         contentPanel.addQuery(query);
         // TO DO: This is the place where you should connect the new query to the twitter source
         twitterSource.addObserver(query);
         twitterSource.getFilterTerms();
-
     }
 
     /**
@@ -133,11 +141,11 @@ public class MainPanel extends JFrame {
      * @return
      */
     private Set<String> getQueryTerms() {
-        Set<String> ans = new HashSet<>();
+        Set<String> queryTerms = new HashSet<>();
         for (Query q : queries) {
-            ans.addAll(q.getFilter().terms());
+            queryTerms.addAll(q.getFilter().terms());
         }
-        return ans;
+        return queryTerms;
     }
 
     // How big is a single pixel on the map?  We use this to compute which tweet markers
@@ -150,27 +158,29 @@ public class MainPanel extends JFrame {
 
     // Get those layers (of tweet markers) that are visible because their corresponding query is enabled
     private Set<Layer> getVisibleLayers() {
-        Set<Layer> ans = new HashSet<>();
+        Set<Layer> layers = new HashSet<>();
         for (Query q : queries) {
             if (q.getVisible()) {
-                ans.add(q.getLayer());
+                layers.add(q.getLayer());
             }
         }
-        return ans;
+        return layers;
     }
 
     // Get all the markers at the given map position, at the current map zoom setting
     private List<MapMarker> getMarkersCovering(ICoordinate pos, double pixelWidth) {
-        List<MapMarker> ans = new ArrayList<>();
+        List<MapMarker> mapMarkers = new ArrayList<>();
         Set<Layer> visibleLayers = getVisibleLayers();
         for (MapMarker m : map().getMapMarkerList()) {
-            if (!visibleLayers.contains(m.getLayer())) continue;
+            if (!visibleLayers.contains(m.getLayer())) {
+                continue;
+            }
             double distance = Util.distanceBetween(m.getCoordinate(), pos);
             if (distance < m.getRadius() * pixelWidth) {
-                ans.add(m);
+                mapMarkers.add(m);
             }
         }
-        return ans;
+        return mapMarkers;
     }
 
     public JMapViewer map() {
@@ -196,8 +206,8 @@ public class MainPanel extends JFrame {
     public void terminateQuery(Query query) {
         // TO DO: This is the place where you should disconnect the expiring query from the twitter source
         queries.remove(query);
-        Set<String> allterms = getQueryTerms();
-        twitterSource.setFilterTerms(allterms);
+        Set<String> allTerms = getQueryTerms();
+        twitterSource.setFilterTerms(allTerms);
         twitterSource.deleteObserver(query);
     }
 }

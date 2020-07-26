@@ -4,8 +4,6 @@ import query.Query;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -22,19 +20,20 @@ public class NewQueryPanel extends JPanel {
     public NewQueryPanel(MainPanel app) {
         this.app = app;
         this.colorSetter = new JPanel();
+        this.random = new Random();
 
-        random = new Random();
+        buildNewQueryPanel();
+    }
 
+    private void buildNewQueryPanel() {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        JLabel queryLabel = new JLabel("Enter Search: ");
-        queryLabel.setLabelFor(newQuery);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridwidth = GridBagConstraints.RELATIVE;
         gridBagConstraints.fill = GridBagConstraints.NONE;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridx = 0;
-        add(queryLabel, gridBagConstraints);
+        add(createAddQueryLabel(), gridBagConstraints);
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         newQuery.setMaximumSize(new Dimension(200, 20));
@@ -51,6 +50,7 @@ public class NewQueryPanel extends JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridx = 0;
         add(colorLabel, gridBagConstraints);
+
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.gridx = 1;
@@ -59,38 +59,48 @@ public class NewQueryPanel extends JPanel {
 
         add(Box.createRigidArea(new Dimension(5, 5)));
 
-        JButton addQueryButton = new JButton("Add New Search");
         gridBagConstraints.gridx = GridBagConstraints.RELATIVE;       //aligned with button 2
         gridBagConstraints.gridwidth = 2;   //2 columns wide
         gridBagConstraints.gridy = GridBagConstraints.RELATIVE;       //third row
+
+        JButton addQueryButton = createAddQueryButton();
         add(addQueryButton, gridBagConstraints);
-
-        setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createTitledBorder("New Search"),
-                        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-        addQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!newQuery.getText().equals("")) {
-                    addQuery(newQuery.getText().toLowerCase());
-                    newQuery.setText("");
-                }
-            }
-        });
+        addBorderToQueryPanel();
 
         // This makes the "Enter" key submit the query.
         app.getRootPane().setDefaultButton(addQueryButton);
+        attachEventToColorSetter();
+    }
 
+    private JLabel createAddQueryLabel() {
+        JLabel queryLabel = new JLabel("Enter Search: ");
+        queryLabel.setLabelFor(newQuery);
+        return queryLabel;
+    }
+
+    private JButton createAddQueryButton() {
+        JButton addQueryButton = new JButton("Add New Search");
+        addQueryButton.addActionListener(e -> {
+            if (!newQuery.getText().equals("")) {
+                addQuery(newQuery.getText().toLowerCase());
+                newQuery.setText("");
+            }
+        });
+        return addQueryButton;
+    }
+
+    private void addBorderToQueryPanel() {
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("New Search"),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    }
+
+    private void attachEventToColorSetter() {
         colorSetter.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    Color newColor = JColorChooser.showDialog(
-                            app,
-                            "Choose Background Color",
-                            colorSetter.getBackground());
+                    Color newColor = JColorChooser.showDialog(app, "Choose Background Color", colorSetter.getBackground());
                     // newColor is "null" if user clicks "Cancel" button on JColorChooser popup.
                     if (newColor != null) {
                         colorSetter.setBackground(newColor);
