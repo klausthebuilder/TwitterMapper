@@ -34,37 +34,4 @@ public class TestUtil {
         objectSource.close();
         assertNotNull(object);
     }
-
-    @Test
-    public void testSimpleFilterTerms() {
-        Filter filter = new SimpleFilter("fred");
-        List<String> listOfTerms = filter.getTerms();
-        assertTrue(listOfTerms.contains("fred"));
-        assertFalse(listOfTerms.contains("fr"));
-    }
-
-    @Test
-    public void testNotFilterTerms() {
-        Filter filter = new NotFilter(new SimpleFilter("fred"));
-        List<String> listOfTerms = filter.getTerms();
-        assertTrue(listOfTerms.contains("fred"));
-        assertFalse(listOfTerms.contains("fr"));
-    }
-
-    @Test
-    public void testAndFilterTerms() {
-        Filter filter = new AndFilter(new SimpleFilter("fred"), new SimpleFilter("flinstone"));
-        List<String> listOfTerms = filter.getTerms();
-        System.out.println(listOfTerms);
-        assertTrue(listOfTerms.contains("fred"));
-        assertTrue(listOfTerms.contains("flinstone"));
-    }
-
-    @Test
-    public void testOrFilterTerms() {
-        Filter filter = new OrFilter(new SimpleFilter("fred"), new SimpleFilter("flinstone"));
-        List<String> listOfTerms = filter.getTerms();
-        assertTrue(listOfTerms.contains("fred"));
-        assertTrue(listOfTerms.contains("flinstone"));
-    }
 }
