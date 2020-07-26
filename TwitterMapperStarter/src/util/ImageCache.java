@@ -39,7 +39,7 @@ public class ImageCache {
         BufferedImage bufferedImage = imageCache.get(url);
 
         if (bufferedImage == null) {
-            bufferedImage = Util.imageFromURL(url);
+            bufferedImage = Util.getImageFromURL(url);
             imageCache.put(url, bufferedImage);
         }
 
@@ -74,7 +74,7 @@ public class ImageCache {
         if (imageFromCache == null) {
             imageCache.put(url, Util.DEFAULT_IMAGE);
             Thread thread = new Thread(() -> {
-                BufferedImage imageFromURL = Util.imageFromURL(url);
+                BufferedImage imageFromURL = Util.getImageFromURL(url);
                 SwingUtilities.invokeLater(() -> imageCache.put(url, imageFromURL));
             });
             thread.run();

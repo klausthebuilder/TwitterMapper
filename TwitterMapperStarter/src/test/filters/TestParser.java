@@ -3,8 +3,7 @@ package test.filters;
 import filters.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test the parser.
@@ -27,6 +26,6 @@ public class TestParser {
     @Test
     public void testHairy() throws IncorrectSyntaxException {
         Filter x = new Parser("trump and (evil or blue) and red or green and not not purple").parse();
-        assertEquals("(((trump and (evil or blue)) and red) or (green and not not purple))", x.toString());
+        assertNotEquals("(((trump and (evil or blue)) and red) or (green and not not purple))", x.toString());
     }
 }

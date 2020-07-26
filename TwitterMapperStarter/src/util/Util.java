@@ -14,10 +14,10 @@ import java.net.URL;
  * Helpful methods that don't clearly fit anywhere else.
  */
 public class Util {
-    public static final BufferedImage DEFAULT_IMAGE = imageFromURL("http://png-2.findicons.com/files/icons/1995/web_application/48/smiley.png");
+    public static final BufferedImage DEFAULT_IMAGE = getImageFromURL("http://png-2.findicons.com/files/icons/1995/web_application/48/smiley.png");
     private static final int EARTH_RADIUS_IN_METERS = 6371000;
 
-    public static BufferedImage imageFromURL(String url) {
+    public static BufferedImage getImageFromURL(String url) {
         try {
             BufferedImage img = ImageIO.read(new URL(url));
             if (img == null) {
@@ -53,7 +53,7 @@ public class Util {
         return (bottomRight.getLongitude() + topLeft.getLongitude()) / 2;
     }
 
-    public static double distanceBetween(ICoordinate p1, ICoordinate p2) {
+    public static double getDistanceBetween(ICoordinate p1, ICoordinate p2) {
         double lat1 = p1.getLat() / 180.0 * Math.PI;
         double lat2 = p2.getLat() / 180.0 * Math.PI;
         double deltaLon = (p2.getLon() - p1.getLon()) / 180.0 * Math.PI;

@@ -34,11 +34,11 @@ public interface Filter {
     boolean matches(Status s);
 
     /**
-     * Get all the terms (strings in basic filters) used in this filter.
-     * When we query the Twitter API, we must indicate all the terms we are
+     * Get all the getTerms (strings in basic filters) used in this filter.
+     * When we query the Twitter API, we must indicate all the getTerms we are
      * interested in, and this allows us to collect them up for each active query.
      *
-     * @return a list of terms mentioned in this filter
+     * @return a list of getTerms mentioned in this filter
      */
-    List<String> terms();
+    List<String> getTerms();
 }

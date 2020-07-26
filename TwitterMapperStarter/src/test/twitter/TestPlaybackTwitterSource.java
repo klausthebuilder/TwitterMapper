@@ -25,15 +25,15 @@ public class TestPlaybackTwitterSource {
             source.addObserver(to);
             source.setFilterTerms(set("food"));
             pause(3000);
-            assertTrue(to.getNTweets() > 0, "Expected getNTweets() to be > 0, was " + to.getNTweets());
-            assertTrue(to.getNTweets() <= 10, "Expected getNTweets() to be <= 10, was " + to.getNTweets());
-            int firstBunch = to.getNTweets();
+            assertTrue(to.getTweetCount() > 0, "Expected getTweetCount() to be > 0, was " + to.getTweetCount());
+            assertTrue(to.getTweetCount() <= 10, "Expected getTweetCount() to be <= 10, was " + to.getTweetCount());
+            int firstBunch = to.getTweetCount();
             System.out.println("Now adding 'the'");
             source.setFilterTerms(set("food", "the"));
             pause(3000);
-            assertTrue(to.getNTweets() > 0, "Expected getNTweets() to be > 0, was " + to.getNTweets());
-            assertTrue(to.getNTweets() > firstBunch, "Expected getNTweets() to be < firstBunch (" + firstBunch + "), was " + to.getNTweets());
-            assertTrue(to.getNTweets() <= 10, "Expected getNTweets() to be <= 10, was " + to.getNTweets());
+            assertTrue(to.getTweetCount() > 0, "Expected getTweetCount() to be > 0, was " + to.getTweetCount());
+            assertTrue(to.getTweetCount() > firstBunch, "Expected getTweetCount() to be < firstBunch (" + firstBunch + "), was " + to.getTweetCount());
+            assertTrue(to.getTweetCount() <= 10, "Expected getTweetCount() to be <= 10, was " + to.getTweetCount());
         } catch (InvalidParameterException e) {
             fail(e.getMessage());
         }

@@ -135,7 +135,7 @@ public class MainPanel extends JFrame {
     }
 
     /**
-     * return a list of all terms mentioned in all queries. The live twitter source uses this
+     * return a list of all getTerms mentioned in all queries. The live twitter source uses this
      * to request matching tweets from the Twitter API.
      *
      * @return
@@ -143,7 +143,7 @@ public class MainPanel extends JFrame {
     private Set<String> getQueryTerms() {
         Set<String> queryTerms = new HashSet<>();
         for (Query q : queries) {
-            queryTerms.addAll(q.getFilter().terms());
+            queryTerms.addAll(q.getFilter().getTerms());
         }
         return queryTerms;
     }
@@ -153,7 +153,7 @@ public class MainPanel extends JFrame {
     private double pixelWidth(Point p) {
         ICoordinate center = map().getPosition(p);
         ICoordinate edge = map().getPosition(new Point(p.x + 1, p.y));
-        return Util.distanceBetween(center, edge);
+        return Util.getDistanceBetween(center, edge);
     }
 
     // Get those layers (of tweet markers) that are visible because their corresponding query is enabled
@@ -175,7 +175,7 @@ public class MainPanel extends JFrame {
             if (!visibleLayers.contains(m.getLayer())) {
                 continue;
             }
-            double distance = Util.distanceBetween(m.getCoordinate(), pos);
+            double distance = Util.getDistanceBetween(m.getCoordinate(), pos);
             if (distance < m.getRadius() * pixelWidth) {
                 mapMarkers.add(m);
             }

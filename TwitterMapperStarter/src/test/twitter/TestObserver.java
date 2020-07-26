@@ -1,20 +1,17 @@
 package test.twitter;
 
-import twitter4j.Status;
-
 import java.util.Observable;
 import java.util.Observer;
 
 public class TestObserver implements Observer {
-    private int nTweets = 0;
+    private int tweetCount = 0;
 
     @Override
     public void update(Observable observable, Object arg) {
-        Status status = (Status) arg;
-        nTweets++;
+        tweetCount++;
     }
 
-    public int getNTweets() {
-        return nTweets;
+    public int getTweetCount() {
+        return tweetCount;
     }
 }

@@ -19,8 +19,10 @@ public class AndFilter implements Filter {
     }
 
     @Override
-    public List<String> terms() {
-        return child1.terms();
+    public List<String> getTerms() {
+        List<String> terms = child1.getTerms();
+        terms.addAll(child2.getTerms());
+        return terms;
     }
 
     public String toString() {

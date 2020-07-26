@@ -6,7 +6,7 @@ import util.ObjectSource;
 /**
  * A Twitter source that plays back a recorded stream of tweets.
  * <p>
- * It ignores the set of terms provided except it uses the first call to setFilterTerms
+ * It ignores the set of getTerms provided except it uses the first call to setFilterTerms
  * as a signal to begin playback of the recorded stream of tweets.
  * <p>
  * Implements Observable - each tweet is signalled to all observers

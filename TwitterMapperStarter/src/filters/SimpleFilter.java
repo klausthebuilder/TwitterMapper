@@ -25,7 +25,7 @@ public class SimpleFilter implements Filter {
     }
 
     @Override
-    public List<String> terms() {
+    public List<String> getTerms() {
         List<String> terms = new ArrayList<>(1);
         terms.add(word);
         return terms;

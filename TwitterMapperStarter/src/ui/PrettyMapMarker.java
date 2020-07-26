@@ -18,7 +18,7 @@ public class PrettyMapMarker extends MapMarkerCircle {
         super(layer, null, coord, DEFAULT_MARKER_SIZE, STYLE.FIXED, getDefaultStyle());
         setColor(Color.BLACK);
         setBackColor(color);
-        image = Util.imageFromURL(profileImageURL);
+        image = Util.getImageFromURL(profileImageURL);
         tweetText = tweet;
         profileImageUrl = profileImageURL;
     }

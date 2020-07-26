@@ -7,7 +7,7 @@ import java.util.*;
 
 public abstract class TwitterSource extends Observable {
     protected boolean isLogging = true;
-    // The set of terms to look for in the stream of tweets
+    // The set of getTerms to look for in the stream of tweets
     protected Set<String> terms = new HashSet<>();
 
     protected void log(Status status) {
@@ -39,6 +39,6 @@ public abstract class TwitterSource extends Observable {
         System.out.println(status.getUser().getName() + ": " + status.getText());
     }
 
-    // Called each time a new set of filter terms has been established
+    // Called each time a new set of filter getTerms has been established
     abstract protected void sync();
 }
